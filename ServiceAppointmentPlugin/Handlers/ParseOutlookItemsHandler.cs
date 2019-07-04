@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Microting.AppointmentBase.Infrastructure.Data;
+using Microting.AppointmentBase.Infrastructure.Data.Constants;
 using Rebus.Bus;
 using Rebus.Handlers;
 using ServiceAppointmentPlugin.Abstractions;
+using ServiceAppointmentPlugin.Infrastructure.Models;
 using ServiceAppointmentPlugin.Messages;
 using ServiceAppointmentPlugin.OfficeApi;
 
@@ -40,10 +43,18 @@ namespace ServiceAppointmentPlugin.Handlers
             this.outlookExchangeOnlineAPIClient = outlookExchangeOnlineAPIClient;
             this.bus = bus;
             //checkLast_At = DateTime.Parse(sqlController.SettingRead(Settings.checkLast_At));
-            checkPreSend_Hours = double.Parse(sqlController.SettingRead(Settings.checkPreSend_Hours));
-            checkRetrace_Hours = double.Parse(sqlController.SettingRead(Settings.checkRetrace_Hours));
-            checkEvery_Mins = int.Parse(sqlController.SettingRead(Settings.checkEvery_Mins));
-            includeBlankLocations = bool.Parse(sqlController.SettingRead(Settings.includeBlankLocations));
+//            checkPreSend_Hours = double.Parse(sqlController.SettingRead(Settings.checkPreSend_Hours));
+//            checkRetrace_Hours = double.Parse(sqlController.SettingRead(Settings.checkRetrace_Hours));
+//            checkEvery_Mins = int.Parse(sqlController.SettingRead(Settings.checkEvery_Mins));
+//            includeBlankLocations = bool.Parse(sqlController.SettingRead(Settings.includeBlankLocations));
+            double checkPreSend_Hours = double.Parse(_dbContext.PluginConfigurationValues
+                .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkPreSend_Hours")?.Value);
+            double checkRetrace_Hours = double.Parse(_dbContext.PluginConfigurationValues
+                .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkRetrace_Hours")?.Value);
+            int checkEvery_Mins = int.Parse(_dbContext.PluginConfigurationValues
+                .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkEvery_Mins")?.Value);
+            bool includeBlankLocations = bool.Parse(_dbContext.PluginConfigurationValues
+                .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:includeBlankLocations")?.Value);
 
             userEmailAddess = outlookOnlineController.GetUserEmailAddress();
 
@@ -79,7 +90,7 @@ namespace ServiceAppointmentPlugin.Handlers
             //if (processingState.ToLower() == "planned")
             //#region planned
             //{
-                log.LogVariable("Not Specified", nameof(processingState), processingState);
+//                log.LogVariable("Not Specified", nameof(processingState), processingState);
 
                 if (message.Item.BodyPreview != null)
                     if (message.Item.BodyPreview.Contains("<<< "))
@@ -90,7 +101,7 @@ namespace ServiceAppointmentPlugin.Handlers
                             message.Item.BodyPreview = message.Item.BodyPreview.Trim();
                         }
 
-                log.LogStandard("Not Specified", "Trying to do UpdateEvent on item.Id:" + message.Item.Id + " to have new location location : " + processingState);
+//                log.LogStandard("Not Specified", "Trying to do UpdateEvent on item.Id:" + message.Item.Id + " to have new location location : " + processingState);
                 Event updatedItem = outlookExchangeOnlineAPIClient.UpdateEvent(userEmailAddess, message.Item.Id, "{\"Location\": {\"DisplayName\": \"" + processingState + "\"},\"Body\": {\"ContentType\": \"HTML\",\"Content\": \"" + ReplaceLinesInBody(message.Item.BodyPreview) + "\"}}");
 
                 //if (updatedItem == null)
@@ -98,16 +109,32 @@ namespace ServiceAppointmentPlugin.Handlers
                 //    return false;
                 //}
 
-                log.LogStandard("Not Specified", "Trying create new appointment for item.Id : " + message.Item.Id + " and the UpdateEvent returned Updateditem: " + updatedItem.ToString());
+//                log.LogStandard("Not Specified", "Trying create new appointment for item.Id : " + message.Item.Id + " and the UpdateEvent returned Updateditem: " + updatedItem.ToString());
 
                 Appointment appo;
                 int appoId = 0;
-                appo = sqlController.AppointmentsFind(message.Item.Id);
+                appo = Appointment.AppointmentsFind(_dbContext, message.Item.Id);
                 if (appo == null)
                 {
-                    appo = new Appointment(message.Item.Id, message.Item.Start.DateTime, (message.Item.End.DateTime - message.Item.Start.DateTime).Minutes, message.Item.Subject, "planned", updatedItem.BodyPreview, t.Bool(sqlController.SettingRead(Settings.colorsRule)), null);
+                    
+                    bool colorsRule = bool.Parse(_dbContext.PluginConfigurationValues
+                        .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkPreSend_Hours")?.Value);
+                    appo = new Appointment()
+                    {
+                        GlobalId = message.Item.Id,
+                        Start = message.Item.Start.DateTime,
+                        Duration = (message.Item.End.DateTime - message.Item.Start.DateTime).Minutes,
+                        Subject = message.Item.Subject,
+                        ProcessingState = Constants.ProcessingState.Planned,
+                        Body = updatedItem.BodyPreview,
+                        ColorRule = colorsRule
+                    };
+//                    appo = new Appointment(message.Item.Id, message.Item.Start.DateTime,
+//                        (message.Item.End.DateTime - message.Item.Start.DateTime).Minutes, message.Item.Subject,
+//                        "planned", updatedItem.BodyPreview, colorsRule),
+//                        null);
                     appo.ParseBodyContent(sdkCore);
-                    appoId = sqlController.AppointmentsCreate(appo);
+//                    appoId = sqlController.AppointmentsCreate(appo);
                 }
 
                 //log.LogStandard("Not Specified", "Before calling CalendarItemIntrepret.AppointmentsCreate");
@@ -115,19 +142,19 @@ namespace ServiceAppointmentPlugin.Handlers
 
                 if (appoId > 0)
                 {
-                    log.LogStandard("Not Specified", "Appointment created successfully for item.Id : " + message.Item.Id);
-                    outlookOnlineController.CalendarItemUpdate(appo.GlobalId, appo.Start, ProcessingStateOptions.Processed, appo.Body);
+//                    log.LogStandard("Not Specified", "Appointment created successfully for item.Id : " + message.Item.Id);
+                    outlookOnlineController.CalendarItemUpdate(appo.GlobalId, appo.Start, Appointment.ProcessingStateOptions.Processed, appo.Body);
                     bus.SendLocal(new AppointmentCreatedInOutlook(appo)).Wait();
             }
                 else
                 {
                     if (appoId == 0)
                     {
-                        outlookOnlineController. CalendarItemUpdate(appo.GlobalId, appo.Start, ProcessingStateOptions.Exception, appo.Body);
+                        outlookOnlineController. CalendarItemUpdate(appo.GlobalId, appo.Start, Appointment.ProcessingStateOptions.Exception, appo.Body);
                     }
                     if (appoId == -1)
                     {
-                        log.LogStandard("Not Specified", "Appointment not created successfully for item.Id : " + message.Item.Id);
+//                        log.LogStandard("Not Specified", "Appointment not created successfully for item.Id : " + message.Item.Id);
 
                         #region appo.Body = 'text'
                         appo.Body = "<<< Parsing error: Start >>>" +
@@ -144,7 +171,7 @@ namespace ServiceAppointmentPlugin.Handlers
                             Environment.NewLine + "" +
                             Environment.NewLine + appo.Body;
                         #endregion
-                        outlookOnlineController.CalendarItemUpdate(appo.GlobalId, appo.Start, ProcessingStateOptions.ParsingFailed, appo.Body);
+                        outlookOnlineController.CalendarItemUpdate(appo.GlobalId, appo.Start, Appointment.ProcessingStateOptions.ParsingFailed, appo.Body);
                     }
                 }
 

@@ -1,9 +1,12 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microting.AppointmentBase.Infrastructure.Data;
 using Rebus.Bus;
 using ServiceAppointmentPlugin.Abstractions;
+using ServiceAppointmentPlugin.Infrastructure.Models;
+using ServiceAppointmentPlugin.Messages;
 using ServiceAppointmentPlugin.OfficeApi;
 
 namespace ServiceAppointmentPlugin.Services
@@ -11,16 +14,16 @@ namespace ServiceAppointmentPlugin.Services
     public class OutlookOnlineController : IOutlookOnlineController
     {
         #region var
-        string calendarName;
+        private string _calendarName;
 //        SqlController sqlController;
-        private AppointmentPnDbContext _dbContext;
+        private readonly AppointmentPnDbContext _dbContext;
 //        Log log;
-        Tools t = new Tools();
-        object _lockOutlook = new object();
-        public IBus bus;
+        private readonly Tools _t = new Tools();
+        private readonly object _lockOutlook = new object();
+        private readonly IBus _bus;
 
-        OutlookExchangeOnlineAPIClient outlookExchangeOnlineAPIClient;
-        string userEmailAddess;
+        private readonly OutlookExchangeOnlineAPIClient _outlookExchangeOnlineApiClient;
+        private string _userEmailAddress;
         #endregion
 
         #region con
@@ -28,8 +31,8 @@ namespace ServiceAppointmentPlugin.Services
         {
             this._dbContext = dbContext;
 //            this.log = log;
-            this.outlookExchangeOnlineAPIClient = outlookExchangeOnlineAPIClient;
-            this.bus = bus;
+            this._outlookExchangeOnlineApiClient = outlookExchangeOnlineAPIClient;
+            this._bus = bus;
         }
         #endregion
 
@@ -42,10 +45,19 @@ namespace ServiceAppointmentPlugin.Services
                 bool ConvertedAny = false;
                 #region var
                 //DateTime checkLast_At = DateTime.Parse(sqlController.SettingRead(Settings.checkLast_At));
-                double checkPreSend_Hours = double.Parse(sqlController.SettingRead(Settings.checkPreSend_Hours));
-                double checkRetrace_Hours = double.Parse(sqlController.SettingRead(Settings.checkRetrace_Hours));
-                int checkEvery_Mins = int.Parse(sqlController.SettingRead(Settings.checkEvery_Mins));
-                bool includeBlankLocations = bool.Parse(sqlController.SettingRead(Settings.includeBlankLocations));
+                double checkPreSend_Hours = double.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkPreSend_Hours")?.Value);
+                double checkRetrace_Hours = double.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkRetrace_Hours")?.Value);
+                int checkEvery_Mins = int.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkEvery_Mins")?.Value);
+                bool includeBlankLocations = bool.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:includeBlankLocations")?.Value);
+                
+//                double checkPreSend_Hours = double.Parse(sqlController.SettingRead(Settings.checkPreSend_Hours));
+//                double checkRetrace_Hours = double.Parse(sqlController.SettingRead(Settings.checkRetrace_Hours));
+//                int checkEvery_Mins = int.Parse(sqlController.SettingRead(Settings.checkEvery_Mins));
+//                bool includeBlankLocations = bool.Parse(sqlController.SettingRead(Settings.includeBlankLocations));
 
                 DateTime timeOfRun = DateTime.Now;
                 DateTime tLimitTo = timeOfRun.AddHours(+checkPreSend_Hours);
@@ -102,7 +114,7 @@ namespace ServiceAppointmentPlugin.Services
                                 if (CalendarItemDelete(item.Id))
                                 {
 //                                    log.LogStandard(t.GetMethodName("OutlookOnlineController"), "converted " + item.Subject + " / " + item.Start.DateTime + "/ duration "+ (item.End.DateTime - item.Start.DateTime).Minutes + " to non-recurence appointment");
-                                    bus.SendLocal(new ParseOutlookItem(appointmentGuid)).Wait();
+                                    _bus.SendLocal(new ParseOutlookItem(appointmentGuid)).Wait();
                                     ConvertedAny = true;
                                 }
 
@@ -115,16 +127,16 @@ namespace ServiceAppointmentPlugin.Services
 
                 #endregion
 
-                if (ConvertedAny)
+//                if (ConvertedAny)
 //                    log.LogStandard(t.GetMethodName("OutlookOnlineController"), "completed + converted appointment(s)");
-                else
+//                else
 //                    log.LogEverything(t.GetMethodName("OutlookOnlineController"), "completed");
 
                 return ConvertedAny;
             }
             catch (Exception ex)
             {
-                throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed", ex);
+                throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed", ex);
             }
         }
 
@@ -135,10 +147,18 @@ namespace ServiceAppointmentPlugin.Services
                 bool AllParsed = false;
                 #region var
                 //DateTime checkLast_At = DateTime.Parse(sqlController.SettingRead(Settings.checkLast_At));
-                double checkPreSend_Hours = double.Parse(sqlController.SettingRead(Settings.checkPreSend_Hours));
-                double checkRetrace_Hours = double.Parse(sqlController.SettingRead(Settings.checkRetrace_Hours));
-                int checkEvery_Mins = int.Parse(sqlController.SettingRead(Settings.checkEvery_Mins));
-                bool includeBlankLocations = bool.Parse(sqlController.SettingRead(Settings.includeBlankLocations));
+//                double checkPreSend_Hours = double.Parse(sqlController.SettingRead(Settings.checkPreSend_Hours));
+//                double checkRetrace_Hours = double.Parse(sqlController.SettingRead(Settings.checkRetrace_Hours));
+//                int checkEvery_Mins = int.Parse(sqlController.SettingRead(Settings.checkEvery_Mins));
+//                bool includeBlankLocations = bool.Parse(sqlController.SettingRead(Settings.includeBlankLocations));
+                double checkPreSend_Hours = double.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkPreSend_Hours")?.Value);
+                double checkRetrace_Hours = double.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkRetrace_Hours")?.Value);
+                int checkEvery_Mins = int.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:checkEvery_Mins")?.Value);
+                bool includeBlankLocations = bool.Parse(_dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:includeBlankLocations")?.Value);
 
                 DateTime timeOfRun = DateTime.Now;
                 DateTime tLimitTo = timeOfRun.AddHours(+checkPreSend_Hours);
@@ -159,7 +179,7 @@ namespace ServiceAppointmentPlugin.Services
                         {
                             if (string.IsNullOrEmpty(item.Location.DisplayName))
                             {
-                                bus.SendLocal(new ParseOutlookItem(item)).Wait();
+                                _bus.SendLocal(new ParseOutlookItem(item)).Wait();
                             }                         
                         }
                     }
@@ -171,7 +191,7 @@ namespace ServiceAppointmentPlugin.Services
             catch (Exception ex)
             {
 //                log.LogException(t.GetMethodName("OutlookOnlineController"),  "failed", ex, false);
-                throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed", ex);
+                throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed", ex);
             }
         }
 
@@ -180,27 +200,27 @@ namespace ServiceAppointmentPlugin.Services
             try
             {
                 #region appointment = 'find one';
-                appointments appointment = null;
+                Microting.AppointmentBase.Infrastructure.Data.Entities.Appointment appointment = null;
                 string Categories = null;
                 if (globalId == null)
-                    appointment = sqlController.AppointmentsFindOne(0);
+                    appointment = Appointment.AppointmentsFindOne(_dbContext, 0);
                 //else
                 //    appointment = sqlController.AppointmentsFind(globalId);
 
                 if (appointment == null) //double checks status if no new found
-                    appointment = sqlController.AppointmentsFindOne(1);
+                    appointment = Appointment.AppointmentsFindOne(_dbContext, 0);
                 #endregion
 
                 if (appointment == null)
                     return false;
 //                log.LogVariable(t.GetMethodName("OutlookOnlineController"), nameof(appointments), appointment.ToString());
 
-                Event item = AppointmentItemFind(appointment.global_id, appointment.start_at.Value.AddHours(-36), appointment.start_at.Value.AddHours(36)); // TODO!
+                Event item = AppointmentItemFind(appointment.GlobalId, appointment.StartAt.Value.AddHours(-36), appointment.StartAt.Value.AddHours(36)); // TODO!
                 if (item != null)
                 {
-                    item.Location.DisplayName = appointment.processing_state;
+                    item.Location.DisplayName = appointment.ProcessingState;
                     #region item.Categories = 'workflowState'...
-                    switch (appointment.processing_state)
+                    switch (appointment.ProcessingState)
                     {
                         case "Planned":
                             Categories = null;
@@ -237,43 +257,43 @@ namespace ServiceAppointmentPlugin.Services
                             break;
                     }
                     #endregion
-                    item.BodyPreview = appointment.body;
+                    item.BodyPreview = appointment.Body;
                     #region item.Body = appointment.expectionString + item.Body + appointment.response ...
-                    if (!string.IsNullOrEmpty(appointment.response))
+                    if (!string.IsNullOrEmpty(appointment.Response))
                     {
-                        if (t.Bool(sqlController.SettingRead(Settings.responseBeforeBody)))
-                        {
-                            item.BodyPreview = "<<< Response: Start >>>" +
-                            Environment.NewLine +
-                            Environment.NewLine + appointment.response +
-                            Environment.NewLine +
-                            Environment.NewLine + "<<< Response: End >>>" +
-                            Environment.NewLine +
-                            Environment.NewLine + item.BodyPreview;
-                        }
-                        else
-                        {
-                            item.BodyPreview = item.BodyPreview +
-                            Environment.NewLine +
-                            Environment.NewLine + "<<< Response: Start >>>" +
-                            Environment.NewLine +
-                            Environment.NewLine + appointment.response +
-                            Environment.NewLine +
-                            Environment.NewLine + "<<< Response: End >>>";
-                        }
+//                        if (t.Bool(sqlController.SettingRead(Settings.responseBeforeBody)))
+//                        {
+//                            item.BodyPreview = "<<< Response: Start >>>" +
+//                            Environment.NewLine +
+//                            Environment.NewLine + appointment.response +
+//                            Environment.NewLine +
+//                            Environment.NewLine + "<<< Response: End >>>" +
+//                            Environment.NewLine +
+//                            Environment.NewLine + item.BodyPreview;
+//                        }
+//                        else
+//                        {
+                        item.BodyPreview = item.BodyPreview +
+                        Environment.NewLine +
+                        Environment.NewLine + "<<< Response: Start >>>" +
+                        Environment.NewLine +
+                        Environment.NewLine + appointment.Response +
+                        Environment.NewLine +
+                        Environment.NewLine + "<<< Response: End >>>";
+//                        }
                     }
-                    if (!string.IsNullOrEmpty(appointment.exceptionString))
+                    if (!string.IsNullOrEmpty(appointment.ExceptionString))
                     {
                         item.BodyPreview = "<<< Exception: Start >>>" +
                         Environment.NewLine +
-                        Environment.NewLine + appointment.exceptionString +
+                        Environment.NewLine + appointment.ExceptionString +
                         Environment.NewLine +
                         Environment.NewLine + "<<< Exception: End >>>" +
                         Environment.NewLine +
                         Environment.NewLine + item.BodyPreview;
                     }
                     #endregion
-                    Event eresult = outlookExchangeOnlineAPIClient.UpdateEvent(userEmailAddess, item.Id, CalendarItemUpdateBody(item.BodyPreview, item.Location.DisplayName, Categories));
+                    Event eresult = _outlookExchangeOnlineApiClient.UpdateEvent(_userEmailAddress, item.Id, CalendarItemUpdateBody(item.BodyPreview, item.Location.DisplayName, Categories));
                     if (eresult == null)
                     {
                         return false;
@@ -288,13 +308,13 @@ namespace ServiceAppointmentPlugin.Services
 //                else
 //                    log.LogWarning(t.GetMethodName("OutlookOnlineController"), "globalId:'" + appointment.global_id + "' no longer in calendar, so hence is considered to be reflected in calendar");
 
-                sqlController.AppointmentsReflected(appointment.global_id);
+                Appointment.AppointmentsReflected(_dbContext, appointment.GlobalId);
 //                log.LogStandard(t.GetMethodName("OutlookOnlineController"), "globalId:'" + appointment.global_id + "' reflected in database");
                 return true;
             }
             catch (Exception ex)
             {
-                throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed", ex);
+                throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed", ex);
             }
         }
 
@@ -312,17 +332,17 @@ namespace ServiceAppointmentPlugin.Services
                 throw new ArgumentNullException("originalEndTimeZone cannot be null or empty");
             try
             {
-                Event newAppo = outlookExchangeOnlineAPIClient.CreateEvent(userEmailAddess, GetCalendarID(), CalendarItemCreateBody(subject, body, location, start, start.AddMinutes(duration), originalStartTimeZone, originalEndTimeZone));
+                Event newAppo = _outlookExchangeOnlineApiClient.CreateEvent(_userEmailAddress, GetCalendarID(), CalendarItemCreateBody(subject, body, location, start, start.AddMinutes(duration), originalStartTimeZone, originalEndTimeZone));
 //                log.LogStandard(t.GetMethodName("OutlookOnlineController"), "Calendar item created in " + calendarName);
                 return newAppo;
             }
             catch (Exception ex)
             {
-                throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed", ex);
+                throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed", ex);
             }
         }
 
-        public bool CalendarItemUpdate(string globalId, DateTime start, ProcessingStateOptions workflowState, string body)
+        public bool CalendarItemUpdate(string globalId, DateTime start, Appointment.ProcessingStateOptions workflowState, string body)
         {
             if (string.IsNullOrEmpty(globalId))
                 throw new ArgumentNullException("globalId cannot be null or empty");
@@ -333,7 +353,7 @@ namespace ServiceAppointmentPlugin.Services
             //Event item = AppointmentItemFind(globalId, start.AddHours(-36), start.AddHours(36)); // TODO!
             //Event item = GetEvent(globalId);
             //userEmailAddess = GetUserEmailAddress();
-            Event item = outlookExchangeOnlineAPIClient.GetEvent(globalId, userEmailAddess);
+            Event item = _outlookExchangeOnlineApiClient.GetEvent(globalId, _userEmailAddress);
 
             if (item == null)
                 return false;
@@ -344,40 +364,40 @@ namespace ServiceAppointmentPlugin.Services
             #region item.Categories = 'workflowState'...
             switch (workflowState)
             {
-                case ProcessingStateOptions.Planned:
+                case Appointment.ProcessingStateOptions.Planned:
                     Categories = null;
                     break;
-                case ProcessingStateOptions.Processed:
+                case Appointment.ProcessingStateOptions.Processed:
                     Categories = CalendarItemCategory.Processing.ToString();
                     break;
-                case ProcessingStateOptions.Created:
+                case Appointment.ProcessingStateOptions.Created:
                     Categories = CalendarItemCategory.Processing.ToString();
                     break;
-                case ProcessingStateOptions.Sent:
+                case Appointment.ProcessingStateOptions.Sent:
                     Categories = CalendarItemCategory.Sent.ToString();
                     break;
-                case ProcessingStateOptions.Retrived:
+                case Appointment.ProcessingStateOptions.Retrived:
                     Categories = CalendarItemCategory.Retrived.ToString();
                     break;
-                case ProcessingStateOptions.Completed:
+                case Appointment.ProcessingStateOptions.Completed:
                     Categories = CalendarItemCategory.Completed.ToString();
                     break;
-                case ProcessingStateOptions.Canceled:
+                case Appointment.ProcessingStateOptions.Canceled:
                     Categories = CalendarItemCategory.Revoked.ToString();
                     break;
-                case ProcessingStateOptions.Revoked:
+                case Appointment.ProcessingStateOptions.Revoked:
                     Categories = CalendarItemCategory.Revoked.ToString();
                     break;
-                case ProcessingStateOptions.Exception:
+                case Appointment.ProcessingStateOptions.Exception:
                     Categories = CalendarItemCategory.Error.ToString();
                     break;
-                case ProcessingStateOptions.ParsingFailed:
+                case Appointment.ProcessingStateOptions.ParsingFailed:
                     Categories = CalendarItemCategory.Error.ToString();
                     break;
             }
             #endregion
 
-            Event eresult = outlookExchangeOnlineAPIClient.UpdateEvent(userEmailAddess, item.Id, CalendarItemUpdateBody(item.BodyPreview, item.Location.DisplayName, Categories));
+            Event eresult = _outlookExchangeOnlineApiClient.UpdateEvent(_userEmailAddress, item.Id, CalendarItemUpdateBody(item.BodyPreview, item.Location.DisplayName, Categories));
             if (eresult == null)
             {
 //                log.LogStandard(t.GetMethodName("OutlookOnlineController"), AppointmentPrint(item) + " NOT updated to " + workflowState.ToString());
@@ -398,8 +418,8 @@ namespace ServiceAppointmentPlugin.Services
 //            log.LogEverything(t.GetMethodName("OutlookOnlineController"), "OutlookOnlineController.CalendarItemDelete called");
             try
             {
-                userEmailAddess = GetUserEmailAddress();
-                outlookExchangeOnlineAPIClient.DeleteEvent(userEmailAddess, globalId);
+                _userEmailAddress = GetUserEmailAddress();
+                _outlookExchangeOnlineApiClient.DeleteEvent(_userEmailAddress, globalId);
 //                log.LogStandard(t.GetMethodName("OutlookOnlineController"), "globalId:'" + globalId + "' deleted");
                 return true;
             }
@@ -428,13 +448,13 @@ namespace ServiceAppointmentPlugin.Services
             try
             {
 //                log.LogEverything(t.GetMethodName("OutlookOnlineController"), "OutlookOnlineController.GetEvent called");
-                userEmailAddess = GetUserEmailAddress();
-                return outlookExchangeOnlineAPIClient.GetEvent(userEmailAddess, globalId);
+                _userEmailAddress = GetUserEmailAddress();
+                return _outlookExchangeOnlineApiClient.GetEvent(_userEmailAddress, globalId);
 
             }
             catch (Exception ex)
             {
-                throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed. Due to no match found global id:" + globalId, ex);
+                throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed. Due to no match found global id:" + globalId, ex);
             }
         }
 
@@ -470,7 +490,7 @@ namespace ServiceAppointmentPlugin.Services
             }
             catch (Exception ex)
             {
-                throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed. Due to no match found global id:" + globalId, ex);
+                throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed. Due to no match found global id:" + globalId, ex);
             }
         }
 
@@ -486,17 +506,17 @@ namespace ServiceAppointmentPlugin.Services
 //                log.LogEverything(t.GetMethodName("OutlookOnlineController"), "OutlookOnlineController.GetCalendarItems called");
                 string filter = "GetCalendarItems [After] '" + tLimitTo.ToString("g") + "' AND [before] <= '" + tLimitFrom.ToString("g") + "'";
 //                log.LogVariable(t.GetMethodName("OutlookOnlineController"), nameof(filter), filter.ToString());
-                calendarName = GetCalendarName();
-                userEmailAddess = GetUserEmailAddress();
-                CalendarList calendarList = outlookExchangeOnlineAPIClient.GetCalendarList(userEmailAddess, calendarName);
+                _calendarName = GetCalendarName();
+                _userEmailAddress = GetUserEmailAddress();
+                CalendarList calendarList = _outlookExchangeOnlineApiClient.GetCalendarList(_userEmailAddress, _calendarName);
                 if (calendarList != null)
                 {
                     foreach (Calendar cal in calendarList.value)
                     {
 //                        log.LogEverything(t.GetMethodName("OutlookOnlineController"), "GetCalendarItems comparing cal.Name " + cal.Name + " with calendarName " + calendarName);
-                        if (cal.Name.Equals(calendarName, StringComparison.OrdinalIgnoreCase))
+                        if (cal.Name.Equals(_calendarName, StringComparison.OrdinalIgnoreCase))
                         {
-                            EventList outlookCalendarItems = outlookExchangeOnlineAPIClient.GetCalendarItems(userEmailAddess, cal.Id, tLimitFrom, tLimitTo);
+                            EventList outlookCalendarItems = _outlookExchangeOnlineApiClient.GetCalendarItems(_userEmailAddress, cal.Id, tLimitFrom, tLimitTo);
                             //log.LogVariable(t.GetMethodName("OutlookOnlineController"), "outlookCalendarItems.Count", outlookCalendarItems.value.Count);
                             return outlookCalendarItems.value;
                         }
@@ -510,42 +530,44 @@ namespace ServiceAppointmentPlugin.Services
         private string GetCalendarName()
         {
 //            log.LogEverything(t.GetMethodName("OutlookOnlineController"), "GetCalendarName called");
-            if (!string.IsNullOrEmpty(calendarName))
-                return calendarName;
+            if (!string.IsNullOrEmpty(_calendarName))
+                return _calendarName;
             else
             {
-                calendarName = sqlController.SettingRead(Settings.calendarName);
-                if (!string.IsNullOrEmpty(calendarName))
-                    return calendarName;
+                _calendarName = _dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:calendarName")?.Value;
+                if (!string.IsNullOrEmpty(_calendarName))
+                    return _calendarName;
                 else
-                    throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed, to get calendarName'");
+                    throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed, to get calendarName'");
             }
 
         }
         public string GetUserEmailAddress()
         {
 //            log.LogEverything(t.GetMethodName("OutlookOnlineController"), "GetUserEmailAddress called");
-            if (!string.IsNullOrEmpty(userEmailAddess))
-                return userEmailAddess;
+            if (!string.IsNullOrEmpty(_userEmailAddress))
+                return _userEmailAddress;
             else
             {
-                userEmailAddess = sqlController.SettingRead(Settings.userEmailAddress);
-                if (!string.IsNullOrEmpty(userEmailAddess))
-                    return userEmailAddess;
+                _userEmailAddress = _dbContext.PluginConfigurationValues
+                    .SingleOrDefault(x => x.Name == "AppointmentBaseSettings:userEmailAddress")?.Value;;
+                if (!string.IsNullOrEmpty(_userEmailAddress))
+                    return _userEmailAddress;
                 else
-                    throw new Exception(t.GetMethodName("OutlookOnlineController") + " failed, to get userEmailAddess");
+                    throw new Exception(_t.GetMethodName("OutlookOnlineController") + " failed, to get userEmailAddess");
             }
         }
         private string GetCalendarID()
         {
-            calendarName = GetCalendarName();
-            userEmailAddess = GetUserEmailAddress();
-            CalendarList calendarList = outlookExchangeOnlineAPIClient.GetCalendarList(userEmailAddess, calendarName);
+            _calendarName = GetCalendarName();
+            _userEmailAddress = GetUserEmailAddress();
+            CalendarList calendarList = _outlookExchangeOnlineApiClient.GetCalendarList(_userEmailAddress, _calendarName);
             if (calendarList != null)
             {
                 foreach (Calendar cal in calendarList.value)
                 {
-                    if (cal.Name.Equals(calendarName, StringComparison.OrdinalIgnoreCase))
+                    if (cal.Name.Equals(_calendarName, StringComparison.OrdinalIgnoreCase))
                     {
                         return cal.Id;
                     }

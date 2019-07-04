@@ -1,5 +1,5 @@
 ﻿using System;
-using Microting.AppointmentBase.Infrastructure.Data.Entities;
+using ServiceAppointmentPlugin.Infrastructure.Models;
 
 namespace ServiceAppointmentPlugin.Messages
 {
