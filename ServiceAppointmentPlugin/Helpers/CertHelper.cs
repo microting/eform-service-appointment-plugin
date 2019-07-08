@@ -22,6 +22,7 @@ namespace ServiceAppointmentPlugin.Helpers
     {
         public static void GenerateSelfSignedCert(string serviceName, string certName, string privateKeyName, string location)
         {
+            Console.WriteLine("GenerateSelfSignedCert called");
             AsymmetricCipherKeyPair subjectKeyPair;
             var computer = Environment.MachineName;
 
