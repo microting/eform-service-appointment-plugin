@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using eFormShared;
 using Microting.AppointmentBase.Infrastructure.Data;
-using Microting.AppointmentBase.Infrastructure.Data.Entities;
+using Microting.eForm.Dto;
 using Constants = Microting.AppointmentBase.Infrastructure.Data.Constants.Constants;
 
 namespace ServiceAppointmentPlugin.Infrastructure.Models

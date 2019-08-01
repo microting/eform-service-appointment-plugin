@@ -3,7 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microting.AppointmentBase.Infrastructure.Data;
-using Microting.AppointmentBase.Infrastructure.Data.Constants;
+using C = Microting.AppointmentBase.Infrastructure.Data.Constants;
+using Microting.eForm.Dto;
+using Microting.eForm.Infrastructure.Constants;
+using Microting.eForm.Infrastructure.Models;
 using Rebus.Handlers;
 using ServiceAppointmentPlugin.Abstractions;
 using ServiceAppointmentPlugin.Infrastructure.Models;
@@ -50,7 +53,7 @@ namespace ServiceAppointmentPlugin.Handlers
                     
                 }
 
-                eFormData.MainElement mainElement = sdkCore.TemplateRead((int)Appo.TemplateId);
+                MainElement mainElement = sdkCore.TemplateRead((int)Appo.TemplateId);
                 if (mainElement == null)
                 {
 //                    log.LogEverything("Not Specified", "outlookController.SyncAppointmentsToSdk() L625 mainElement is NULL!!!");
@@ -72,15 +75,15 @@ namespace ServiceAppointmentPlugin.Handlers
                     string description = "";
                     foreach (AppointmentPrefillFieldValue pfv in Appo.AppointmentPrefillFieldValues)
                     {
-                        eFormData.Field field = sdkCore.Advanced_FieldRead(pfv.FieldId);
+                        Field field = sdkCore.Advanced_FieldRead(pfv.FieldId);
                         string fieldValue = pfv.FieldValue;
-                        if (field.FieldType == eFormShared.Constants.FieldTypes.EntitySelect)
+                        if (field.FieldType == Constants.FieldTypes.EntitySelect)
                         {
 //                            fieldValue = sdkCore.EntityItemReadByMicrotingUUID(pfv.FieldValue).Name;
                         }
                         description = description + "<b>" + field.Label + ":</b> " + fieldValue + "<br>";
                     }
-                    eFormShared.CDataValue cDataValue = new eFormShared.CDataValue();
+                    CDataValue cDataValue = new CDataValue();
                     cDataValue.InderValue = description;
                     mainElement.ElementList[0].Description = cDataValue;
                 }
@@ -115,7 +118,7 @@ namespace ServiceAppointmentPlugin.Handlers
                                 Microting.AppointmentBase.Infrastructure.Data.Entities.AppointmentSite appointmentSite =
                                     _dbContext.AppointmentSites.SingleOrDefault(x => x.Id == appo_site.Id);
                                 appointmentSite.SdkCaseId = resultId;
-                                appointmentSite.ProcessingState = Constants.ProcessingState.Sent;
+                                appointmentSite.ProcessingState = C.Constants.ProcessingState.Sent;
                                 appointmentSite.Update(_dbContext);
                                 allGood = true;
                             }
@@ -152,18 +155,18 @@ namespace ServiceAppointmentPlugin.Handlers
 
         }
 
-        private void SetDefaultValue(List<eFormData.Element> elementLst, List<AppointmentPrefillFieldValue> fieldValues)
+        private void SetDefaultValue(List<Element> elementLst, List<AppointmentPrefillFieldValue> fieldValues)
         {
-            foreach (eFormData.Element element in elementLst)
+            foreach (Element element in elementLst)
             {
-                if (element.GetType() == typeof(eFormData.DataElement))
+                if (element.GetType() == typeof(DataElement))
                 {
-                    eFormData.DataElement dataE = (eFormData.DataElement)element;
-                    foreach (eFormData.DataItem item in dataE.DataItemList)
+                    DataElement dataE = (DataElement)element;
+                    foreach (DataItem item in dataE.DataItemList)
                     {
-                        if (item.GetType() == typeof(eFormData.NumberStepper))
+                        if (item.GetType() == typeof(NumberStepper))
                         {
-                            eFormData.NumberStepper numberStepper = (eFormData.NumberStepper)item;
+                            NumberStepper numberStepper = (NumberStepper)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
@@ -173,9 +176,9 @@ namespace ServiceAppointmentPlugin.Handlers
                             }
 
                         }
-                        if (item.GetType() == typeof(eFormData.Number))
+                        if (item.GetType() == typeof(Number))
                         {
-                            eFormData.Number numberStepper = (eFormData.Number)item;
+                            Number numberStepper = (Number)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
@@ -185,9 +188,9 @@ namespace ServiceAppointmentPlugin.Handlers
                             }
 
                         }
-                        if (item.GetType() == typeof(eFormData.Comment))
+                        if (item.GetType() == typeof(Comment))
                         {
-                            eFormData.Comment comment = (eFormData.Comment)item;
+                            Comment comment = (Comment)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
@@ -197,9 +200,9 @@ namespace ServiceAppointmentPlugin.Handlers
                             }
 
                         }
-                        if (item.GetType() == typeof(eFormData.Text))
+                        if (item.GetType() == typeof(Text))
                         {
-                            eFormData.Text text = (eFormData.Text)item;
+                            Text text = (Text)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
@@ -209,23 +212,23 @@ namespace ServiceAppointmentPlugin.Handlers
                             }
 
                         }
-                        if (item.GetType() == typeof(eFormData.None))
+                        if (item.GetType() == typeof(None))
                         {
-                            eFormData.None text = (eFormData.None)item;
+                            None text = (None)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
                                 {
-                                    eFormShared.CDataValue cDataValue = new eFormShared.CDataValue();
+                                    CDataValue cDataValue = new CDataValue();
                                     cDataValue.InderValue = fv.FieldValue;
                                     text.Description = cDataValue;
                                 }
                             }
 
                         }
-                        if (item.GetType() == typeof(eFormData.EntitySearch))
+                        if (item.GetType() == typeof(EntitySearch))
                         {
-                            eFormData.EntitySearch text = (eFormData.EntitySearch)item;
+                            EntitySearch text = (EntitySearch)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
@@ -234,9 +237,9 @@ namespace ServiceAppointmentPlugin.Handlers
                                 }
                             }
                         }
-                        if (item.GetType() == typeof(eFormData.EntitySelect))
+                        if (item.GetType() == typeof(EntitySelect))
                         {
-                            eFormData.EntitySelect text = (eFormData.EntitySelect)item;
+                            EntitySelect text = (EntitySelect)item;
                             foreach (AppointmentPrefillFieldValue fv in fieldValues)
                             {
                                 if (fv.FieldId == item.Id)
@@ -249,7 +252,7 @@ namespace ServiceAppointmentPlugin.Handlers
                 }
                 else
                 {
-                    eFormData.GroupElement groupElement = (eFormData.GroupElement)element;
+                    GroupElement groupElement = (GroupElement)element;
                     SetDefaultValue(groupElement.ElementList, fieldValues);
                 }
             }
