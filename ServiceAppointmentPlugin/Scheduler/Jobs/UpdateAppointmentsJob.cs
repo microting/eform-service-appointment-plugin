@@ -23,14 +23,19 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
 
         public async Task Execute()
         {
-            // Get all appointments, that have correct repeat settings and don`t next appointment associated yet
+            Console.WriteLine("UpdateAppointmentsJob started");
+
+            // Get all appointments, that have correct repeat settings and don`t have next appointment associated yet
             var recurringAppointments = await _dbContext.Appointments.Where(x =>
                     x.WorkflowState != Constants.WorkflowStates.Removed
                     && x.RepeatEvery != null
                     && x.RepeatType != null
                     && (x.RepeatUntil == null || x.RepeatUntil > DateTime.UtcNow)
+                    && x.StartAt < DateTime.UtcNow
                     && x.NextId == null
                 ).ToListAsync();
+
+            Console.WriteLine($"Found {recurringAppointments.Count} appointments to update");
 
             foreach (var appointment in recurringAppointments)
             {
@@ -45,7 +50,7 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                 var nextDate = GetNextAppointmentDate(prevDate, repeatType, repeatEvery);
 
                 // Clone appointment, until reaching current date, or RepeatUntil date
-                while ((repeatUntil == null || nextDate <= repeatUntil) && prevDate <= DateTime.UtcNow)
+                while ((repeatUntil == null || nextDate < repeatUntil) && prevDate < DateTime.UtcNow)
                 {
                     var nextAppointment = new Appointment
                     {
@@ -67,11 +72,15 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                     prevAppointment.NextId = nextAppointment.Id;
                     await prevAppointment.Update(_dbContext);
 
+                    Console.WriteLine($"Next appointment for {prevAppointment.Id} is {prevAppointment.NextId}");
+
                     prevDate = nextDate;
                     nextDate = GetNextAppointmentDate(prevDate, repeatType, repeatEvery);
                     prevAppointment = nextAppointment;
                 }
             }
+
+            Console.WriteLine("UpdateAppointmentsJob finished");
         }
 
         private DateTime GetNextAppointmentDate(DateTime prevDate, RepeatType repeatType, int repeatEvery)

@@ -100,7 +100,7 @@ namespace ServiceAppointmentPlugin
             Console.WriteLine("ServiceAppointmentPlugin start called");
             try
             {
-                InstallCA();
+                //InstallCA();
                 
                 string dbNameSection;
                 string dbPrefix;
@@ -115,7 +115,7 @@ namespace ServiceAppointmentPlugin
                 }
                 
                 
-                string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-trashinspection-plugin;";
+                string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-appointment-plugin;";
                 string connectionString = sdkConnectionString.Replace(dbNameSection, pluginDbName);
 
 
@@ -233,7 +233,7 @@ namespace ServiceAppointmentPlugin
             _scheduleTimer = new Timer(async x =>
             {
                 await job.Execute();
-            }, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
+            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
         }
     }
 }
