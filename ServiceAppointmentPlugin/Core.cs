@@ -230,10 +230,10 @@ namespace ServiceAppointmentPlugin
         {
             var job = _container.Resolve<UpdateAppointmentsJob>();
 
-            _scheduleTimer = new Timer(async x =>
+            _scheduleTimer = new Timer(async _ =>
             {
                 await job.Execute();
-            }, null, TimeSpan.Zero, TimeSpan.FromSeconds(15));
+            }, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
         }
     }
 }

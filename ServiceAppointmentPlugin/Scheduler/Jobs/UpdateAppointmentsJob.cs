@@ -1,11 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microting.AppointmentBase.Infrastructure.Data;
 using Microting.AppointmentBase.Infrastructure.Data.Entities;
 using Microting.AppointmentBase.Infrastructure.Data.Enums;
+using Microting.eForm.Dto;
 using Microting.eForm.Infrastructure.Constants;
+using Microting.eForm.Infrastructure.Models;
 using Rebus.Bus;
 
 namespace ServiceAppointmentPlugin.Scheduler.Jobs
@@ -14,17 +18,27 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
     {
         private readonly AppointmentPnDbContext _dbContext;
         private readonly IBus _bus;
+        private readonly eFormCore.Core _core;
 
-        public UpdateAppointmentsJob(AppointmentPnDbContext dbContext, IBus bus)
+        public UpdateAppointmentsJob(AppointmentPnDbContext dbContext, IBus bus, eFormCore.Core core)
         {
             _dbContext = dbContext;
             _bus = bus;
+            _core = core;
         }
 
         public async Task Execute()
         {
             Console.WriteLine("UpdateAppointmentsJob started");
 
+            await UpdateRecurringAppointments();
+            await CreateAppointmentsCases();
+
+            Console.WriteLine("UpdateAppointmentsJob finished");
+        }
+
+        private async Task UpdateRecurringAppointments()
+        {
             // Get all appointments, that have correct repeat settings and don`t have next appointment associated yet
             var recurringAppointments = await _dbContext.Appointments.Where(x =>
                     x.WorkflowState != Constants.WorkflowStates.Removed
@@ -79,8 +93,41 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                     prevAppointment = nextAppointment;
                 }
             }
+        }
 
-            Console.WriteLine("UpdateAppointmentsJob finished");
+        private async Task CreateAppointmentsCases()
+        {
+            // Get appointments, that are ready to start
+            var appointments = await _dbContext.Appointments.Where(x =>
+                x.WorkflowState == Constants.WorkflowStates.Created
+                && x.StartAt < DateTime.UtcNow
+                && x.ExpireAt > DateTime.UtcNow
+            ).ToListAsync();
+
+            Console.WriteLine($"Found {appointments.Count} appointments to start");
+
+            foreach (var appointment in appointments)
+            {
+                appointment.WorkflowState = Constants.WorkflowStates.Processed;
+                var mainElement = _core.TemplateRead(appointment.SdkeFormId ?? 0);
+
+                // appointment can contain prefilled values, so we need to write them to mainElement
+                foreach (var fv in appointment.AppointmentPrefillFieldValues)
+                {
+                    SetDefaultValue(mainElement.ElementList, fv);
+                }
+
+                Console.WriteLine($"Appointment {appointment.Id} has {appointment.AppointmentSites.Count} sites associated");
+
+                // create cases to each associated site
+                foreach (var appointmentSite in appointment.AppointmentSites)
+                {
+                    var caseUid = _core.CaseCreate(mainElement, null, appointmentSite.MicrotingSiteUid);
+                    Console.WriteLine($"Case {caseUid} created for site {appointmentSite.MicrotingSiteUid}");
+                }
+
+                await appointment.Update(_dbContext);
+            }
         }
 
         private DateTime GetNextAppointmentDate(DateTime prevDate, RepeatType repeatType, int repeatEvery)
@@ -93,6 +140,50 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                     return prevDate.AddDays(repeatEvery * 7);
                 default:
                     return prevDate.AddDays(repeatEvery);
+            }
+        }
+        private void SetDefaultValue(IEnumerable<Element> elementLst, AppointmentPrefillFieldValue fv)
+        {
+            foreach (var element in elementLst)
+            {
+                if (element is DataElement dataElement)
+                {
+                    foreach (var item in dataElement.DataItemList.Where(item => fv.FieldId == item.Id))
+                    {
+                        switch (item)
+                        {
+                            case NumberStepper numberStepper:
+                                numberStepper.DefaultValue = int.Parse(fv.FieldValue);
+                                break;
+                            case Number number:
+                                number.DefaultValue = int.Parse(fv.FieldValue);
+                                break;
+                            case Comment comment:
+                                comment.Value = fv.FieldValue;
+                                break;
+                            case Text text:
+                                text.Value = fv.FieldValue;
+                                break;
+                            case None none:
+                                var cDataValue = new CDataValue();
+                                cDataValue.InderValue = fv.FieldValue;
+                                none.Description = cDataValue;
+                                break;
+                            case EntitySearch entitySearch:
+                                entitySearch.DefaultValue = int.Parse(fv.FieldValue);
+                                break;
+                            case EntitySelect entitySelect:
+                                entitySelect.DefaultValue = int.Parse(fv.FieldValue);
+                                break;
+
+                        }
+                    }
+                }
+                else
+                {
+                    var groupElement = (GroupElement)element;
+                    SetDefaultValue(groupElement.ElementList, fv);
+                }
             }
         }
     }
