@@ -103,21 +103,21 @@ namespace ServiceAppointmentPlugin.Handlers
                         foreach (AppointmentSite appo_site in appoSites)
                         {
 //                            log.LogEverything("Not Specified", "outlookController.foreach AppoinntmentSite appo_site is : " + appo_site.MicrotingSiteUid);
-                            string resultId;
+                            int? resultId;
                             if (appo_site.SdkCaseId == null) {
                                  resultId = sdkCore.CaseCreate(mainElement, "", appo_site.MicrotingSiteUid);
 //                                log.LogEverything("Not Specified", "outlookController.foreach resultId is : " + resultId);
                                 
                             } else
                             {
-                                resultId = appo_site.SdkCaseId;
+                                resultId = int.Parse(appo_site.SdkCaseId);
                             }
                             
-                            if (!string.IsNullOrEmpty(resultId))
+                            if (resultId != null)
                             {
                                 Microting.AppointmentBase.Infrastructure.Data.Entities.AppointmentSite appointmentSite =
                                     _dbContext.AppointmentSites.SingleOrDefault(x => x.Id == appo_site.Id);
-                                appointmentSite.SdkCaseId = resultId;
+                                appointmentSite.SdkCaseId = resultId.ToString();
                                 appointmentSite.ProcessingState = C.Constants.ProcessingState.Sent;
                                 appointmentSite.Update(_dbContext);
                                 allGood = true;
