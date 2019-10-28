@@ -33,6 +33,7 @@ using Microting.AppointmentBase.Infrastructure.Data;
 using Microting.AppointmentBase.Infrastructure.Data.Factories;
 using ServiceAppointmentPlugin.Helpers;
 using ServiceAppointmentPlugin.Installers;
+using ServiceAppointmentPlugin.Scheduler.Jobs;
 
 namespace ServiceAppointmentPlugin
 {
@@ -51,8 +52,9 @@ namespace ServiceAppointmentPlugin
         private int _maxParallelism = 1;
         private int _numberOfWorkers = 1;
         private AppointmentPnDbContext _dbContext;
+        private Timer _scheduleTimer;
         #endregion
-        
+
         public void CoreEventException(object sender, EventArgs args)
         {
             // Do nothing
@@ -98,7 +100,7 @@ namespace ServiceAppointmentPlugin
             Console.WriteLine("ServiceAppointmentPlugin start called");
             try
             {
-                InstallCA();
+                //InstallCA();
                 
                 string dbNameSection;
                 string dbPrefix;
@@ -113,7 +115,7 @@ namespace ServiceAppointmentPlugin
                 }
                 
                 
-                string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-trashinspection-plugin;";
+                string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-appointment-plugin;";
                 string connectionString = sdkConnectionString.Replace(dbNameSection, pluginDbName);
 
 
@@ -145,9 +147,12 @@ namespace ServiceAppointmentPlugin
                         new RebusHandlerInstaller()
                         , new RebusInstaller(connectionString, _maxParallelism, _numberOfWorkers)
                     );
+                    _container.Register(Component.For<UpdateAppointmentsJob>());
 
 
                     _bus = _container.Resolve<IBus>();
+
+                    ConfigureScheduler();
                 }
                 Console.WriteLine("ServiceAppointmentPlugin started");
                 return true;
@@ -181,6 +186,8 @@ namespace ServiceAppointmentPlugin
 
                     _coreStatChanging = false;
                 }
+
+                _scheduleTimer.Dispose();
             }
             catch (ThreadAbortException)
             {
@@ -217,6 +224,16 @@ namespace ServiceAppointmentPlugin
                 CertHelper.GenerateSelfSignedCert(_serviceLocation.Split('\\').Last(), "key.cer", "cert.pfx", certsFolder);
             }
             Console.WriteLine("InstallCA done");
+        }
+
+        private void ConfigureScheduler()
+        {
+            var job = _container.Resolve<UpdateAppointmentsJob>();
+
+            _scheduleTimer = new Timer(async _ =>
+            {
+                await job.Execute();
+            }, null, TimeSpan.Zero, TimeSpan.FromMinutes(15));
         }
     }
 }

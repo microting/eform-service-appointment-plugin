@@ -1,16 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>netcoreapp2.2</TargetFramework>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
 
-    <ItemGroup>
-      <PackageReference Include="BouncyCastle" Version="1.8.5" />
-      <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
-      <PackageReference Include="Microting.AppointmentBase" Version="1.1.20" />
-      <PackageReference Include="Microting.eForm" Version="3.0.320" />
-      <PackageReference Include="Microting.WindowsService.BasePn" Version="1.1.13" />
-      <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
-    </ItemGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>../../MicrotingService/bin/Debug/Plugins/ServiceAppointmentPlugin</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BouncyCastle" Version="1.8.5" />
+    <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="2.1.0" />
+    <PackageReference Include="Microsoft.IdentityModel.Clients.ActiveDirectory" Version="5.1.1" />
+    <PackageReference Include="Microting.AppointmentBase" Version="1.1.8" />
+    <PackageReference Include="Microting.eForm" Version="3.0.285" />
+    <PackageReference Include="Microting.WindowsService.BasePn" Version="1.1.13" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="4.5.0" />
+  </ItemGroup>
 
 </Project>
