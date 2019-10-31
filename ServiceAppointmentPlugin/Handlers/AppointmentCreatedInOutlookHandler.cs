@@ -53,7 +53,7 @@ namespace ServiceAppointmentPlugin.Handlers
                     
                 }
 
-                MainElement mainElement = sdkCore.TemplateRead((int)Appo.TemplateId);
+                MainElement mainElement = await sdkCore.TemplateRead((int)Appo.TemplateId);
                 if (mainElement == null)
                 {
 //                    log.LogEverything("Not Specified", "outlookController.SyncAppointmentsToSdk() L625 mainElement is NULL!!!");
@@ -75,7 +75,7 @@ namespace ServiceAppointmentPlugin.Handlers
                     string description = "";
                     foreach (AppointmentPrefillFieldValue pfv in Appo.AppointmentPrefillFieldValues)
                     {
-                        Field field = sdkCore.Advanced_FieldRead(pfv.FieldId);
+                        Field field = await sdkCore.Advanced_FieldRead(pfv.FieldId);
                         string fieldValue = pfv.FieldValue;
                         if (field.FieldType == Constants.FieldTypes.EntitySelect)
                         {
@@ -105,7 +105,7 @@ namespace ServiceAppointmentPlugin.Handlers
 //                            log.LogEverything("Not Specified", "outlookController.foreach AppoinntmentSite appo_site is : " + appo_site.MicrotingSiteUid);
                             int? resultId;
                             if (appo_site.SdkCaseId == null) {
-                                 resultId = sdkCore.CaseCreate(mainElement, "", appo_site.MicrotingSiteUid);
+                                 resultId = await sdkCore.CaseCreate(mainElement, "", appo_site.MicrotingSiteUid);
 //                                log.LogEverything("Not Specified", "outlookController.foreach resultId is : " + resultId);
                                 
                             } else
@@ -119,7 +119,7 @@ namespace ServiceAppointmentPlugin.Handlers
                                     _dbContext.AppointmentSites.SingleOrDefault(x => x.Id == appo_site.Id);
                                 appointmentSite.SdkCaseId = resultId.ToString();
                                 appointmentSite.ProcessingState = C.Constants.ProcessingState.Sent;
-                                appointmentSite.Update(_dbContext);
+                                await appointmentSite.Update(_dbContext);
                                 allGood = true;
                             }
                             else
