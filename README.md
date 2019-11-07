@@ -4,6 +4,16 @@ Build status
 
 ## NOTICE! this is not a standalone project and needs to be used with eForm Angular Frontend.
 
+# Plugin automatic installation
+
+This is expection you to have eform-angular-frontend installed as default in /var/www/microting/
+
+```
+cd /var/www/microting/
+curl -s -L https://raw.githubusercontent.com/microting/eform-service-appointment-plugin/stable/install.sh | sudo bash
+```
+
+
 ## Contributing
 
 1. Do a fork
