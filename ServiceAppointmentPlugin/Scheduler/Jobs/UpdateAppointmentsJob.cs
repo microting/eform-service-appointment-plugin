@@ -114,7 +114,7 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                 // appointment can contain prefilled values, so we need to write them to mainElement
                 foreach (var fv in appointment.AppointmentPrefillFieldValues)
                 {
-                    SetDefaultValue(mainElement.ElementList, fv);
+                    SetDefaultValue(mainElement.Result.ElementList, fv);
                 }
 
                 Console.WriteLine($"Appointment {appointment.Id} has {appointment.AppointmentSites.Count} sites associated");
@@ -122,7 +122,7 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                 // create cases to each associated site
                 foreach (var appointmentSite in appointment.AppointmentSites)
                 {
-                    var caseUid = _core.CaseCreate(mainElement, null, appointmentSite.MicrotingSiteUid);
+                    var caseUid = _core.CaseCreate(await mainElement, null, appointmentSite.MicrotingSiteUid);
                     Console.WriteLine($"Case {caseUid} created for site {appointmentSite.MicrotingSiteUid}");
                 }
 

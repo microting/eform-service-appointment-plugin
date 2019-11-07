@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microting.AppointmentBase.Infrastructure.Data;
 using Microting.eForm.Dto;
 using Constants = Microting.AppointmentBase.Infrastructure.Data.Constants.Constants;
@@ -307,9 +308,9 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
             return returnValue;
         }
         
-        private void FindFieldPreFillValues(eFormCore.Core sdkCore)
+        private async Task FindFieldPreFillValues(eFormCore.Core sdkCore)
         {
-            List<Field_Dto> fieldDtos = sdkCore.Advanced_TemplateFieldReadAll(TemplateId);
+            List<Field_Dto> fieldDtos = await sdkCore.Advanced_TemplateFieldReadAll(TemplateId);
 
             foreach (Field_Dto fieldDto in fieldDtos)
             {
