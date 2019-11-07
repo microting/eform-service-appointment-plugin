@@ -22,4 +22,4 @@ su ubuntu -c \
 
 su ubuntu -c \
 "cp -av /var/www/microting/eform-service-itemsplanning-plugin/ServiceAppointmentPlugin/out /var/www/microting/eform-debian-service/MicrotingService/MicrotingService/out/Plugins/ServiceAppointmentPlugin"
-./rabbitmqadmin declare queue name=eform-service-appointment-plugin durable=true
+/rabbitmqadmin declare queue name=eform-service-appointment-plugin durable=true
