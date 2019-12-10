@@ -1,7 +1,4 @@
 dist: xenial
-branches:
-  only:
-    - master
 language: csharp
 solution: ServiceAppointmentPlugin.sln
 mono: none
