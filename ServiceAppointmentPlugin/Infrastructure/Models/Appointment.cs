@@ -310,9 +310,9 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
         
         private async Task FindFieldPreFillValues(eFormCore.Core sdkCore)
         {
-            List<Field_Dto> fieldDtos = await sdkCore.Advanced_TemplateFieldReadAll(TemplateId);
+            List<FieldDto> fieldDtos = await sdkCore.Advanced_TemplateFieldReadAll(TemplateId);
 
-            foreach (Field_Dto fieldDto in fieldDtos)
+            foreach (FieldDto fieldDto in fieldDtos)
             {
                 string value = FindValue($"F{fieldDto.Id}#");
 
