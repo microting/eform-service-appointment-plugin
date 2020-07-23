@@ -24,14 +24,11 @@ using Castle.Windsor;
 using Microting.WindowsService.BasePn;
 using System.ComponentModel.Composition;
 using System;
-using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
 using Microsoft.EntityFrameworkCore;
 using Microting.AppointmentBase.Infrastructure.Data;
 using Microting.AppointmentBase.Infrastructure.Data.Factories;
-using ServiceAppointmentPlugin.Helpers;
 using ServiceAppointmentPlugin.Installers;
 using ServiceAppointmentPlugin.Scheduler.Jobs;
 
@@ -211,19 +208,6 @@ namespace ServiceAppointmentPlugin
             _sdkCore = new eFormCore.Core();
 
             _sdkCore.StartSqlOnly(sdkConnectionString);
-        }
-
-        private void InstallCA()
-        {
-            Console.WriteLine("InstallCA called");
-            string certsFolder = Path.Combine(_serviceLocation, "cert");
-            Directory.CreateDirectory(certsFolder);
-            string filePath = certsFolder + "\\key.cer";
-            if (!File.Exists(filePath))
-            {
-                CertHelper.GenerateSelfSignedCert(_serviceLocation.Split('\\').Last(), "key.cer", "cert.pfx", certsFolder);
-            }
-            Console.WriteLine("InstallCA done");
         }
 
         private void ConfigureScheduler()

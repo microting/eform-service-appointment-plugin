@@ -122,7 +122,7 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
                 // create cases to each associated site
                 foreach (var appointmentSite in appointment.AppointmentSites)
                 {
-                    var caseUid = _core.CaseCreate(await mainElement, null, appointmentSite.MicrotingSiteUid);
+                    var caseUid = _core.CaseCreate(await mainElement, null, appointmentSite.MicrotingSiteUid, null);
                     Console.WriteLine($"Case {caseUid} created for site {appointmentSite.MicrotingSiteUid}");
                 }
 
