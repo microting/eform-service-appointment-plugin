@@ -54,7 +54,7 @@ if (( "$GIT_STATUS" > 0 )); then
 		git push --tags
 		git push
 		echo "Updated Microting eForm to ${EFORM_VERSION} and pushed new version ${NEW_GIT_VERSION}"
-		cd ../../../..
+		cd ..
 		github_changelog_generator -u microting -p $REPOSITORY -t $CHANGELOG_GITHUB_TOKEN
 		git add CHANGELOG.md
 		git commit -m "Updating changelog"
