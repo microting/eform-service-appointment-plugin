@@ -2,15 +2,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microting.AppointmentBase.Infrastructure.Data;
 using Microting.eForm.Dto;
+using Microting.eForm.Infrastructure;
+using Microting.eForm.Infrastructure.Data.Entities;
 using Constants = Microting.AppointmentBase.Infrastructure.Data.Constants.Constants;
 
 namespace ServiceAppointmentPlugin.Infrastructure.Models
 {
     public class Appointment
     {
-        
+
         #region var/pop
         public string GlobalId { get; set; }
         public DateTime Start { get; set; }
@@ -36,7 +39,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
 
         Tools t = new Tools();
         #endregion
-        
+
         public static Appointment AppointmentsFind(AppointmentPnDbContext dbContext, string globalId)
         {
 //            log.LogStandard(t.GetMethodName("SQLController"), "AppointmentsFind looking for one with globalId " + globalId);
@@ -100,8 +103,8 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
                 return null;
             }
         }
-        
-        
+
+
 
         public static Microting.AppointmentBase.Infrastructure.Data.Entities.Appointment AppointmentsFindOne(
             AppointmentPnDbContext dbContext, int timesReflected)
@@ -117,7 +120,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
                 return null;
             }
         }
-        
+
         public static bool AppointmentsUpdate(AppointmentPnDbContext dbContext, string globalId,
             ProcessingStateOptions processingState, string body, string exceptionString, string response,
             bool completed, DateTime start_at, DateTime expire_at, int duration)
@@ -161,7 +164,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
                 return false;
             }
         }
-        
+
         public static bool AppointmentsReflected(AppointmentPnDbContext dbContext, string globalId)
         {
             try
@@ -190,7 +193,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
                 return false;
             }
         }
-        
+
         public static Appointment AppointmentFindByCaseId(AppointmentPnDbContext dbContext, string sdkCaseId)
         {
             try
@@ -205,7 +208,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
                 Microting.AppointmentBase.Infrastructure.Data.Entities.Appointment _appo = appointmentSite.Appointment;
                 Appointment appointment = new Appointment()
                 {
-                    
+
                 };
 //                Appointment appo = new Appointment(_appo.global_id, (DateTime)_appo.start_at, (int)_appo.duration, _appo.subject, _appo.processing_state, _appo.body, (_appo.color_rule == 0 ? false : true), _appo.id);
 //                AppoinntmentSite appo_site = new AppoinntmentSite((int)_appo_site.id, _appo_site.microting_site_uid, _appo_site.processing_state, _appo_site.sdk_case_id);
@@ -220,7 +223,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
                 return null;
             }
         }
-        
+
         public enum ProcessingStateOptions
         {
             //Appointment locations options / ProcessingState options
@@ -237,7 +240,7 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
             Exception,
             Unknown_location
         }
-        
+
         public void ParseBodyContent(eFormCore.Core sdkCore)
         {
 
@@ -307,10 +310,12 @@ namespace ServiceAppointmentPlugin.Infrastructure.Models
             }
             return returnValue;
         }
-        
+
         private async Task FindFieldPreFillValues(eFormCore.Core sdkCore)
         {
-            List<FieldDto> fieldDtos = await sdkCore.Advanced_TemplateFieldReadAll(TemplateId);
+            await using MicrotingDbContext microtingDbContext = sdkCore.DbContextHelper.GetDbContext();
+            Language language = await microtingDbContext.Languages.SingleAsync(x => x.LanguageCode == "da");
+            List<FieldDto> fieldDtos = await sdkCore.Advanced_TemplateFieldReadAll(TemplateId, language);
 
             foreach (FieldDto fieldDto in fieldDtos)
             {

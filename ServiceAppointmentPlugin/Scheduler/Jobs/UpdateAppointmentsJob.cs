@@ -8,7 +8,9 @@ using Microting.AppointmentBase.Infrastructure.Data;
 using Microting.AppointmentBase.Infrastructure.Data.Entities;
 using Microting.AppointmentBase.Infrastructure.Data.Enums;
 using Microting.eForm.Dto;
+using Microting.eForm.Infrastructure;
 using Microting.eForm.Infrastructure.Constants;
+using Microting.eForm.Infrastructure.Data.Entities;
 using Microting.eForm.Infrastructure.Models;
 using Rebus.Bus;
 
@@ -82,7 +84,7 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
 
                     await nextAppointment.Create(_dbContext);
 
-                    // Save the Id of new copy of appointment to the NextId property of previous appointment. 
+                    // Save the Id of new copy of appointment to the NextId property of previous appointment.
                     prevAppointment.NextId = nextAppointment.Id;
                     await prevAppointment.Update(_dbContext);
 
@@ -106,10 +108,12 @@ namespace ServiceAppointmentPlugin.Scheduler.Jobs
 
             Console.WriteLine($"Found {appointments.Count} appointments to start");
 
+            await using MicrotingDbContext microtingDbContext = _core.DbContextHelper.GetDbContext();
+            Language language = await microtingDbContext.Languages.SingleAsync(x => x.LanguageCode == "da");
             foreach (var appointment in appointments)
             {
                 appointment.WorkflowState = Constants.WorkflowStates.Processed;
-                var mainElement = _core.TemplateRead(appointment.SdkeFormId ?? 0);
+                var mainElement = _core.ReadeForm(appointment.SdkeFormId ?? 0, language);
 
                 // appointment can contain prefilled values, so we need to write them to mainElement
                 foreach (var fv in appointment.AppointmentPrefillFieldValues)
