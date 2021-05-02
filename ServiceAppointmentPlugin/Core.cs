@@ -98,20 +98,10 @@ namespace ServiceAppointmentPlugin
             try
             {
                 //InstallCA();
-                
-                string dbNameSection;
-                string dbPrefix;
-                if (sdkConnectionString.ToLower().Contains("convert zero datetime"))
-                {
-                    dbNameSection = Regex.Match(sdkConnectionString, @"(Database=\w*;)").Groups[0].Value;
-                    dbPrefix = Regex.Match(sdkConnectionString, @"Database=(\d*)_").Groups[1].Value;
-                } else
-                {
-                    dbNameSection = Regex.Match(sdkConnectionString, @"(Initial Catalog=\w*;)").Groups[0].Value;
-                    dbPrefix = Regex.Match(sdkConnectionString, @"Initial Catalog=(\d*)_").Groups[1].Value;
-                }
-                
-                
+
+                var dbNameSection = Regex.Match(sdkConnectionString, @"(Database=\w*;)").Groups[0].Value;
+                var dbPrefix = Regex.Match(sdkConnectionString, @"Database=(\d*)_").Groups[1].Value;
+
                 string pluginDbName = $"Initial Catalog={dbPrefix}_eform-angular-appointment-plugin;";
                 string connectionString = sdkConnectionString.Replace(dbNameSection, pluginDbName);
 
@@ -120,7 +110,7 @@ namespace ServiceAppointmentPlugin
                 {
                     _serviceLocation = serviceLocation;
                     _coreStatChanging = true;
-                    
+
                     if (string.IsNullOrEmpty(_serviceLocation))
                         throw new ArgumentException("serviceLocation is not allowed to be null or empty");
 
@@ -158,7 +148,7 @@ namespace ServiceAppointmentPlugin
             {
                 Console.ForegroundColor = ConsoleColor.DarkRed;
                 Console.WriteLine("Start failed " + ex.Message);
-                throw ex;
+                throw;
             }
         }
 
@@ -202,7 +192,7 @@ namespace ServiceAppointmentPlugin
         {
             return true;
         }
-        
+
         public void startSdkCoreSqlOnly(string sdkConnectionString)
         {
             _sdkCore = new eFormCore.Core();
