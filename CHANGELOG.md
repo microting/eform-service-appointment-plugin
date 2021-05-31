@@ -1,5 +1,14 @@
 # Changelog
 
+## [v1.0.108](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.108) (2021-05-31)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.107...v1.0.108)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormApi.BasePn from 3.0.13 to 3.0.14 [\#109](https://github.com/microting/eform-service-appointment-plugin/issues/109)
+- Bump Microting.eForm from 5.2.3 to 5.2.4 [\#108](https://github.com/microting/eform-service-appointment-plugin/issues/108)
+
 ## [v1.0.107](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.107) (2021-05-26)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.106...v1.0.107)
