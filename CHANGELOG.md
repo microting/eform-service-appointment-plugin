@@ -1,5 +1,25 @@
 # Changelog
 
+## [v1.0.116](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.116) (2021-07-05)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.115...v1.0.116)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormApi.BasePn from 3.0.26 to 3.0.27 [\#134](https://github.com/microting/eform-service-appointment-plugin/issues/134)
+- Bump Microting.eForm from 5.2.13 to 5.2.14 [\#133](https://github.com/microting/eform-service-appointment-plugin/issues/133)
+
+**Merged pull requests:**
+
+- Bump Microting.eFormApi.BasePn from 3.0.25 to 3.0.26 [\#130](https://github.com/microting/eform-service-appointment-plugin/pull/130) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump NUnit3TestAdapter from 3.17.0 to 4.0.0 [\#120](https://github.com/microting/eform-service-appointment-plugin/pull/120) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microsoft.NET.Test.Sdk from 16.8.3 to 16.10.0 [\#104](https://github.com/microting/eform-service-appointment-plugin/pull/104) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Upgrade to GitHub-native Dependabot [\#80](https://github.com/microting/eform-service-appointment-plugin/pull/80) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump NUnit from 3.13.1 to 3.13.2 [\#79](https://github.com/microting/eform-service-appointment-plugin/pull/79) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microsoft.IdentityModel.Clients.ActiveDirectory from 5.2.8 to 5.2.9 [\#43](https://github.com/microting/eform-service-appointment-plugin/pull/43) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microsoft.Extensions.DependencyModel from 3.1.6 to 5.0.0 [\#7](https://github.com/microting/eform-service-appointment-plugin/pull/7) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump System.ComponentModel.Composition from 4.7.0 to 5.0.0 [\#4](https://github.com/microting/eform-service-appointment-plugin/pull/4) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+
 ## [v1.0.115](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.115) (2021-06-27)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.114...v1.0.115)
