@@ -1,5 +1,9 @@
 # Changelog
 
+## [v1.0.117](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.117) (2021-07-08)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.116...v1.0.117)
+
 ## [v1.0.116](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.116) (2021-07-05)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.115...v1.0.116)
