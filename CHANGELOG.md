@@ -1,8 +1,21 @@
 # Changelog
 
+## [v1.0.128](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.128) (2021-09-16)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.127...v1.0.128)
+
+**Merged pull requests:**
+
+- Bump Microsoft.NET.Test.Sdk from 16.10.0 to 16.11.0 [\#163](https://github.com/microting/eform-service-appointment-plugin/pull/163) ([dependabot[bot]](https://github.com/apps/dependabot))
+
 ## [v1.0.127](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.127) (2021-09-14)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.126...v1.0.127)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormApi.BasePn from 3.0.46 to 3.0.47 [\#176](https://github.com/microting/eform-service-appointment-plugin/issues/176)
+- Bump Microting.eForm from 5.2.36 to 5.2.37 [\#175](https://github.com/microting/eform-service-appointment-plugin/issues/175)
 
 ## [v1.0.126](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.126) (2021-09-14)
 
