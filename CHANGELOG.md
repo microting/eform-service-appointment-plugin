@@ -1,8 +1,49 @@
 # Changelog
 
+## [v1.0.137](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.137) (2021-10-13)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.136...v1.0.137)
+
+## [v1.0.136](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.136) (2021-10-12)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.135...v1.0.136)
+
+## [v1.0.135](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.135) (2021-10-08)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.134...v1.0.135)
+
+## [v1.0.134](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.134) (2021-10-06)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.133...v1.0.134)
+
+## [v1.0.133](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.133) (2021-10-01)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.132...v1.0.133)
+
+## [v1.0.132](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.132) (2021-09-29)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.131...v1.0.132)
+
+## [v1.0.131](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.131) (2021-09-28)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.130...v1.0.131)
+
+## [v1.0.130](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.130) (2021-09-25)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.129...v1.0.130)
+
+## [v1.0.129](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.129) (2021-09-16)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.128...v1.0.129)
+
 ## [v1.0.128](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.128) (2021-09-16)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.127...v1.0.128)
+
+**Implemented enhancements:**
+
+- Bump Microting.eFormApi.BasePn from 3.0.47 to 3.0.49 [\#180](https://github.com/microting/eform-service-appointment-plugin/issues/180)
+- Bump Microting.eForm from 5.2.37 to 5.2.39 [\#179](https://github.com/microting/eform-service-appointment-plugin/issues/179)
 
 **Merged pull requests:**
 
