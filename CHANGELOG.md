@@ -1,8 +1,18 @@
 # Changelog
 
+## [v1.0.140](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.140) (2021-10-21)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.139...v1.0.140)
+
 ## [v1.0.139](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.139) (2021-10-14)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.138...v1.0.139)
+
+**Implemented enhancements:**
+
+- Bump Microting.AppointmentBase from 2.2.10 to 2.2.11 [\#197](https://github.com/microting/eform-service-appointment-plugin/issues/197)
+- Bump Microting.eFormApi.BasePn from 3.0.60 to 3.0.61 [\#196](https://github.com/microting/eform-service-appointment-plugin/issues/196)
+- Bump Microting.eForm from 5.2.51 to 5.2.53 [\#195](https://github.com/microting/eform-service-appointment-plugin/issues/195)
 
 ## [v1.0.138](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.138) (2021-10-14)
 
@@ -144,7 +154,7 @@
 
 - Bump Microting.eFormApi.BasePn from 3.0.30 to 3.0.33 [\#146](https://github.com/microting/eform-service-appointment-plugin/issues/146)
 - Bump Microting.eForm from 5.2.17 to 5.2.21 [\#145](https://github.com/microting/eform-service-appointment-plugin/issues/145)
-- Bump Microting.eFormApi.BasePn from 3.0.27 to 3.0.30 [\#141](https://github.com/microting/eform-service-appointment-plugin/issues/141)
+- Bump Microting.eForm from 5.2.14 to 5.2.15 [\#135](https://github.com/microting/eform-service-appointment-plugin/issues/135)
 
 ## [v1.0.118](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.118) (2021-07-15)
 
@@ -156,8 +166,8 @@
 
 **Implemented enhancements:**
 
+- Bump Microting.eFormApi.BasePn from 3.0.27 to 3.0.30 [\#141](https://github.com/microting/eform-service-appointment-plugin/issues/141)
 - Bump Microting.eFormApi.BasePn from 3.0.27 to 3.0.28 [\#136](https://github.com/microting/eform-service-appointment-plugin/issues/136)
-- Bump Microting.eForm from 5.2.14 to 5.2.15 [\#135](https://github.com/microting/eform-service-appointment-plugin/issues/135)
 
 ## [v1.0.116](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.116) (2021-07-05)
 
@@ -177,7 +187,6 @@
 - Bump NUnit from 3.13.1 to 3.13.2 [\#79](https://github.com/microting/eform-service-appointment-plugin/pull/79) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump Microsoft.IdentityModel.Clients.ActiveDirectory from 5.2.8 to 5.2.9 [\#43](https://github.com/microting/eform-service-appointment-plugin/pull/43) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump Microsoft.Extensions.DependencyModel from 3.1.6 to 5.0.0 [\#7](https://github.com/microting/eform-service-appointment-plugin/pull/7) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
-- Bump Microting.WindowsService.BasePn from 1.1.13 to 2.0.0 [\#5](https://github.com/microting/eform-service-appointment-plugin/pull/5) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump System.ComponentModel.Composition from 4.7.0 to 5.0.0 [\#4](https://github.com/microting/eform-service-appointment-plugin/pull/4) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v1.0.115](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.115) (2021-06-27)
@@ -308,6 +317,7 @@
 
 - Bump NUnit from 3.12.0 to 3.13.1 [\#17](https://github.com/microting/eform-service-appointment-plugin/pull/17) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump Microsoft.NET.Test.Sdk from 16.6.1 to 16.8.3 [\#6](https://github.com/microting/eform-service-appointment-plugin/pull/6) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microting.WindowsService.BasePn from 1.1.13 to 2.0.0 [\#5](https://github.com/microting/eform-service-appointment-plugin/pull/5) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
 ## [v1.0.101](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.101) (2021-02-24)
 
