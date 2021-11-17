@@ -1,8 +1,18 @@
 # Changelog
 
+## [v1.0.144](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.144) (2021-11-17)
+
+[Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.143...v1.0.144)
+
 ## [v1.0.143](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.143) (2021-11-16)
 
 [Full Changelog](https://github.com/microting/eform-service-appointment-plugin/compare/v1.0.142...v1.0.143)
+
+**Implemented enhancements:**
+
+- Bump Microting.AppointmentBase from 2.2.15 to 2.2.17 [\#216](https://github.com/microting/eform-service-appointment-plugin/issues/216)
+- Bump Microting.eFormApi.BasePn from 3.0.64 to 3.1.1 [\#215](https://github.com/microting/eform-service-appointment-plugin/issues/215)
+- Bump Microting.eForm from 5.2.57 to 5.3.2 [\#214](https://github.com/microting/eform-service-appointment-plugin/issues/214)
 
 ## [v1.0.142](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.142) (2021-11-04)
 
@@ -157,6 +167,7 @@
 
 - Bump Microting.eFormApi.BasePn from 3.0.41 to 3.0.42 [\#160](https://github.com/microting/eform-service-appointment-plugin/issues/160)
 - Bump Microting.eForm from 5.2.31 to 5.2.32 [\#159](https://github.com/microting/eform-service-appointment-plugin/issues/159)
+- Bump Microting.eForm from 5.2.22 to 5.2.31 [\#157](https://github.com/microting/eform-service-appointment-plugin/issues/157)
 
 ## [v1.0.121](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.121) (2021-08-11)
 
@@ -165,7 +176,6 @@
 **Implemented enhancements:**
 
 - Bump Microting.eFormApi.BasePn from 3.0.34 to 3.0.41 [\#158](https://github.com/microting/eform-service-appointment-plugin/issues/158)
-- Bump Microting.eForm from 5.2.22 to 5.2.31 [\#157](https://github.com/microting/eform-service-appointment-plugin/issues/157)
 
 ## [v1.0.120](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.120) (2021-08-05)
 
@@ -206,7 +216,6 @@
 **Implemented enhancements:**
 
 - Bump Microting.eFormApi.BasePn from 3.0.26 to 3.0.27 [\#134](https://github.com/microting/eform-service-appointment-plugin/issues/134)
-- Bump Microting.eForm from 5.2.13 to 5.2.14 [\#133](https://github.com/microting/eform-service-appointment-plugin/issues/133)
 
 **Merged pull requests:**
 
@@ -215,6 +224,7 @@
 - Bump Microsoft.NET.Test.Sdk from 16.8.3 to 16.10.0 [\#104](https://github.com/microting/eform-service-appointment-plugin/pull/104) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Upgrade to GitHub-native Dependabot [\#80](https://github.com/microting/eform-service-appointment-plugin/pull/80) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump NUnit from 3.13.1 to 3.13.2 [\#79](https://github.com/microting/eform-service-appointment-plugin/pull/79) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
+- Bump Microsoft.IdentityModel.Clients.ActiveDirectory from 5.2.8 to 5.2.9 [\#43](https://github.com/microting/eform-service-appointment-plugin/pull/43) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump Microsoft.Extensions.DependencyModel from 3.1.6 to 5.0.0 [\#7](https://github.com/microting/eform-service-appointment-plugin/pull/7) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump System.ComponentModel.Composition from 4.7.0 to 5.0.0 [\#4](https://github.com/microting/eform-service-appointment-plugin/pull/4) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 
@@ -224,6 +234,7 @@
 
 **Implemented enhancements:**
 
+- Bump Microting.eForm from 5.2.13 to 5.2.14 [\#133](https://github.com/microting/eform-service-appointment-plugin/issues/133)
 - Bump Microting.eFormApi.BasePn from 3.0.20 to 3.0.25 [\#129](https://github.com/microting/eform-service-appointment-plugin/issues/129)
 - Bump Microting.eForm from 5.2.9 to 5.2.13 [\#128](https://github.com/microting/eform-service-appointment-plugin/issues/128)
 
@@ -313,6 +324,7 @@
 **Implemented enhancements:**
 
 - Bump Microting.eFormApi.BasePn from 3.0.8 to 3.0.9 [\#97](https://github.com/microting/eform-service-appointment-plugin/issues/97)
+- Bump Microting.eForm from 5.1.4 to 5.1.5 [\#96](https://github.com/microting/eform-service-appointment-plugin/issues/96)
 
 ## [v1.0.104](https://github.com/microting/eform-service-appointment-plugin/tree/v1.0.104) (2021-05-07)
 
@@ -320,7 +332,6 @@
 
 **Implemented enhancements:**
 
-- Bump Microting.eForm from 5.1.4 to 5.1.5 [\#96](https://github.com/microting/eform-service-appointment-plugin/issues/96)
 - Bump Microting.eFormApi.BasePn from 3.0.0 to 3.0.8 [\#95](https://github.com/microting/eform-service-appointment-plugin/issues/95)
 - Bump Microting.eForm from 5.0.2 to 5.1.4 [\#94](https://github.com/microting/eform-service-appointment-plugin/issues/94)
 
@@ -344,7 +355,6 @@
 
 **Merged pull requests:**
 
-- Bump Microsoft.IdentityModel.Clients.ActiveDirectory from 5.2.8 to 5.2.9 [\#43](https://github.com/microting/eform-service-appointment-plugin/pull/43) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump NUnit from 3.12.0 to 3.13.1 [\#17](https://github.com/microting/eform-service-appointment-plugin/pull/17) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump Microsoft.NET.Test.Sdk from 16.6.1 to 16.8.3 [\#6](https://github.com/microting/eform-service-appointment-plugin/pull/6) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
 - Bump Microting.WindowsService.BasePn from 1.1.13 to 2.0.0 [\#5](https://github.com/microting/eform-service-appointment-plugin/pull/5) ([dependabot-preview[bot]](https://github.com/apps/dependabot-preview))
